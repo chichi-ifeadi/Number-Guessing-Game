@@ -36,25 +36,26 @@ else
 fi
 
 #ASK FOR RANDOM NUMBER
-GUESS_NUMBER=0
+GUESS_COUNT=0
 while [[ $GUESS -ne $SECRET_NUMBER ]]
 do [[ echo -e "\nGuess the secret number between 1 and 1000:" ]]
-
   read GUESS
 
+  #Increment number of guesses made
+  GUESS_COUNT=$(( GUESS_COUNT +1))
+  if [[ $SECRET_NUMBER -lt $GUESS ]]
+  then 
+    echo "It's lower than that, guess again:"
+    
+  elif [[ $SECRET_NUMBER -gt $GUESS ]]
+  then
+    echo "It's higher than that, guess again:"
 
-
-
-if [[ $SECRET_NUMBER < GUESS ]]
-then 
-  echo "It's lower than that, guess again:"
-  
-elif [[ $SECRET_NUMBER > GUESS ]]
-then
-  echo "It's higher than that, guess again:"
-
-else
-echo "You guessed it in <number_of_guesses> tries. The secret number was $SECRET_NUMBER."
-fi
+  elif [[ $GUESS -ne $SECRET_NUMBER ]]
+  then
+    echo "That is not an integer, guess again:"
+  else
+    echo "You guessed it in $GUESS_COUNT tries. The secret number was $SECRET_NUMBER. Nice job!"
+  fi
 
 done
