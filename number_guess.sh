@@ -14,7 +14,7 @@ read USERNAME
 
 
 USER_DATA=$($PSQL "SELECT username, games_played, best_game FROM users WHERE username='$USERNAME'")
-echo $USER_DATA
+
 #CHECK IF U.NAME ALREADY EXISTS
 if [[ -z $USER_DATA ]] 
 then
@@ -38,7 +38,7 @@ fi
 #ASK FOR RANDOM NUMBER
 GUESS_COUNT=0
 while [[ $GUESS -ne $SECRET_NUMBER ]]
-do [[ echo -e "\nGuess the secret number between 1 and 1000:" ]]
+do echo -e "\nGuess the secret number between 1 and 1000:" 
   read GUESS
 
   #Increment number of guesses made
@@ -56,6 +56,14 @@ do [[ echo -e "\nGuess the secret number between 1 and 1000:" ]]
     echo "That is not an integer, guess again:"
   else
     echo "You guessed it in $GUESS_COUNT tries. The secret number was $SECRET_NUMBER. Nice job!"
+    
+    #UPDATE EXISTING USER DATA
+    $PSQL "UPDATE users SET games_played = games_played +1 WHERE username='$USERNAME' "
+    
+    if [[ $GUESS_COUNT -lt $BEST_GAME ]]
+    then
+      $PSQL "UPDATE users SET best_game = $GUESS_COUNT WHERE username='$USERNAME'"
+    fi
   fi
 
 done
